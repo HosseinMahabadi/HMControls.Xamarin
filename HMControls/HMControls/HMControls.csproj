@@ -1,0 +1,61 @@
+<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;MonoAndroid10.0;xamarinios10</TargetFrameworks>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>Include some usable controls for Xamarin Forms.
+
+https://instagram.com/hossein.mahabadi468</Description>
+    <Copyright>Copyright (c) 2022-2027 Hossein Mahabadi</Copyright>
+    <PackageIcon>HMControlsIcon.png</PackageIcon>
+    <PackageIconUrl />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Platform\Android\Renderers\KeyboardlessEditorRenderer.cs" />
+    <Compile Remove="Platform\Android\Renderers\KeyboardlessEntryRenderer.cs" />
+    <Compile Remove="Platform\Android\Renderers\StandardEditorRenderer.cs" />
+    <Compile Remove="Platform\Android\Renderers\StandardEntryRenderer.cs" />
+    <Compile Remove="Platform\Android\Renderers\StandardPickerRenderer.cs" />
+    <Compile Remove="Platform\Android\Renderers\StandardSearchBarRenderer.cs" />
+    <Compile Remove="Platform\Android\Renderers\StandardTimePickerRenderer.cs" />
+    <Compile Remove="Platform\Android\Renderers\TintImageEffectDroid.cs" />
+    <Compile Remove="Platform\iOS\Renderers\iOSStandardEntryRenderer.cs" />
+    <Compile Remove="Platform\iOS\Renderers\iOSTintImageEffect.cs" />
+    <Compile Remove="Platform\iOS\Renderers\UITextFieldPadding.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Platform\Android\Renderers\StandardEditorRenderer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="HMControlsIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="Platform\Android\Renderers\KeyboardlessEditorRenderer.cs" />
+    <None Include="Platform\Android\Renderers\KeyboardlessEntryRenderer.cs" />
+    <None Include="Platform\Android\Renderers\StandardEntryRenderer.cs" />
+    <None Include="Platform\Android\Renderers\StandardPickerRenderer.cs" />
+    <None Include="Platform\Android\Renderers\StandardSearchBarRenderer.cs" />
+    <None Include="Platform\Android\Renderers\StandardTimePickerRenderer.cs" />
+    <None Include="Platform\Android\Renderers\TintImageEffectDroid.cs" />
+    <None Include="Platform\iOS\Renderers\iOSStandardEntryRenderer.cs" />
+    <None Include="Platform\iOS\Renderers\iOSTintImageEffect.cs" />
+    <None Include="Platform\iOS\Renderers\UITextFieldPadding.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HMExtension.Xamarin" Version="2.1.0" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2515" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
+  </ItemGroup>
+</Project>
