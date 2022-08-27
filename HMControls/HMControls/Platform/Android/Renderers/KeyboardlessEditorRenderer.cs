@@ -17,7 +17,7 @@ namespace HMControls.Platform.Android.Renderers
 {
     class KeyboardlessEditorRenderer : StandardEditorRenderer
     {
-        public SelectableEditor MainElement => Element as SelectableEditor;
+        public KeyboardlessEditor MainElement => Element as KeyboardlessEditor;
 
         public KeyboardlessEditorRenderer(Context context) : base(context)
         { }

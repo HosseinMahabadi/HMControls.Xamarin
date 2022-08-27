@@ -7,6 +7,8 @@ namespace HMControls
 {
     public class StandardTimePicker : TimePicker
     {
+        public RenderModeType RenderMode { get; set; } = RenderModeType.Standard;
+
         public static BindableProperty CornerRadiusProperty =
             BindableProperty.Create(nameof(CornerRadius), typeof(int), typeof(StandardTimePicker), 0);
 

@@ -47,27 +47,31 @@ namespace HMControls.Platform.Android.Renderers
         }
         protected void UpdateBackground(SearchView control)
         {
-            if (control == null) return;
+            if (control != null)
+            {
+                if (ElementV2.RenderMode == RenderModeType.Standard)
+                {
+                    int searchPlateId = control.Context.Resources.GetIdentifier("android:id/search_plate", null, null);
+                    AV.View searchPlateView = control.FindViewById(searchPlateId);
 
-            int searchPlateId = control.Context.Resources.GetIdentifier("android:id/search_plate", null, null);
-            AV.View searchPlateView = control.FindViewById(searchPlateId);
+                    var gd = new GradientDrawable();
+                    gd.SetColor(Element.BackgroundColor.ToAndroid());
+                    gd.SetCornerRadius(Context.ToPixels(ElementV2.CornerRadius));
+                    gd.SetStroke((int)Context.ToPixels(ElementV2.BorderThickness), ElementV2.BorderColor.ToAndroid());
+                    control.SetBackground(gd);
 
-            var gd = new GradientDrawable();
-            gd.SetColor(Element.BackgroundColor.ToAndroid());
-            gd.SetCornerRadius(Context.ToPixels(ElementV2.CornerRadius));
-            gd.SetStroke((int)Context.ToPixels(ElementV2.BorderThickness), ElementV2.BorderColor.ToAndroid());
-            control.SetBackground(gd);
+                    var tgd = new GradientDrawable();
+                    tgd.SetStroke(0, ElementV2.BorderColor.ToAndroid());
+                    searchPlateView.SetBackground(tgd);
 
-            var tgd = new GradientDrawable();
-            tgd.SetStroke(0, ElementV2.BorderColor.ToAndroid());
-            searchPlateView.SetBackground(tgd);
+                    var padTop = (int)Context.ToPixels(ElementV2.Padding.Top);
+                    var padBottom = (int)Context.ToPixels(ElementV2.Padding.Bottom);
+                    var padLeft = (int)Context.ToPixels(ElementV2.Padding.Left);
+                    var padRight = (int)Context.ToPixels(ElementV2.Padding.Right);
 
-            var padTop = (int)Context.ToPixels(ElementV2.Padding.Top);
-            var padBottom = (int)Context.ToPixels(ElementV2.Padding.Bottom);
-            var padLeft = (int)Context.ToPixels(ElementV2.Padding.Left);
-            var padRight = (int)Context.ToPixels(ElementV2.Padding.Right);
-
-            control.SetPadding(padLeft, padTop, padRight, padBottom);
+                    control.SetPadding(padLeft, padTop, padRight, padBottom);
+                }
+            }
         }
         protected void UpdateBackground()
         {

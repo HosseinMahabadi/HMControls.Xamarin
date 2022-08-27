@@ -8,21 +8,21 @@ using Xamarin.Forms.Platform.iOS;
 using HMControls;
 using HMControls.Platform.iOS.Renderers;
 
-[assembly: ExportRenderer(typeof(StandardEntry), typeof(iOSStandardEntryRenderer))]
+[assembly: ExportRenderer(typeof(StandardEditor), typeof(iOSStandardEditorRenderer))]
 
 namespace HMControls.Platform.iOS.Renderers
 {
-    public class iOSStandardEntryRenderer : EntryRenderer
+    public class iOSStandardEditorRenderer : EditorRenderer
     {
-        public StandardEntry ElementV2 => Element as StandardEntry;
-        public UITextFieldPadding ControlV2 => Control as UITextFieldPadding;
+        public StandardEditor ElementV2 => Element as StandardEditor;
+        public UITextViewPadding ControlV2 => Control as UITextViewPadding;
 
-        protected override UITextField CreateNativeControl()
+        protected override UITextView CreateNativeControl()
         {
-            var control = new UITextFieldPadding(RectangleF.Empty)
+            var control = new UITextViewPadding(RectangleF.Empty)
             {
                 Padding = ElementV2.Padding,
-                BorderStyle = UITextBorderStyle.RoundedRect,
+                //BorderStyle = UITextBorderStyle.RoundedRect,
                 ClipsToBounds = true
             };
 
@@ -31,7 +31,7 @@ namespace HMControls.Platform.iOS.Renderers
             return control;
         }
 
-        protected void UpdateBackground(UITextField control)
+        protected void UpdateBackground(UITextView control)
         {
             if (control != null)
             {
@@ -64,5 +64,6 @@ namespace HMControls.Platform.iOS.Renderers
                 }
             }
         }
+
     }
 }

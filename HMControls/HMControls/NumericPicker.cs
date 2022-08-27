@@ -4,12 +4,13 @@ using System.Diagnostics;
 using System.Text;
 using Xamarin.Forms;
 using HMExtension.Xamarin;
+using HMPopup;
 
 namespace HMControls
 {
     public class NumericPicker : KeyboardlessEntry
     {
-        /*private Popups.Popup Popup { get; set; } = new Popups.Popup()
+        private Popup Popup { get; set; } = new Popup()
         {
             FlowDirection = FlowDirection.RightToLeft,
             OkTitle = "تایید",
@@ -17,7 +18,7 @@ namespace HMControls
             YesTitle = "بله",
             NoTitle = "خیر",
             SelectTitle = "انتخاب",
-        };*/
+        };
 
         public NumericPicker()
         {
@@ -30,12 +31,12 @@ namespace HMControls
 
         public override async void ActionOnFocused()
         {
-            /*int answer = await Popup.ShowSelectionAsync(Title,
+            int answer = await Popup.ShowSelectionAsync(Title,
                 Message,
                 Items,
                 SelectedItem);
 
-            SelectedItem = answer;*/
+            SelectedItem = answer;
         }
 
         private List<int> Items { get; set; } = new List<int>() { 0 };

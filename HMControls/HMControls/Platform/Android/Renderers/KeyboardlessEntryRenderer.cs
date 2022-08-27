@@ -17,7 +17,7 @@ namespace HMControls.Platform.Android.Renderers
 {
     public class KeyboardlessEntryRenderer : StandardEntryRenderer
     {
-        public NumericPicker MainElement => Element as NumericPicker;
+        public KeyboardlessEntry MainElement => Element as KeyboardlessEntry;
 
         public KeyboardlessEntryRenderer(Context context) : base(context)
         { }
