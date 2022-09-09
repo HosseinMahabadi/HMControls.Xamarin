@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;MonoAndroid10.0;xamarinios10</TargetFrameworks>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -65,7 +65,7 @@ https://instagram.com/hossein.mahabadi468</Description>
 
   <ItemGroup>
     <PackageReference Include="HMExtension.Xamarin" Version="2.1.7" />
-    <PackageReference Include="HMPopup" Version="1.0.24" />
+    <PackageReference Include="HMPopup" Version="1.0.26" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2515" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
   </ItemGroup>
