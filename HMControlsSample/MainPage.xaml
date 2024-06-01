@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ctrl="clr-namespace:HMControls;assembly=HMControls"
+             x:Class="HMControlsSample.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="15"
+            Spacing="5">
+            <ctrl:StandardEntry Text="Standard Entry" 
+                                Placeholder="Standard Entry"
+                                BorderThickness="1.5"
+                                BorderColor="Orange"
+                                CornerRadius="20" 
+                                BackgroundColor="Red"
+                                RenderMode="Standard"/>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

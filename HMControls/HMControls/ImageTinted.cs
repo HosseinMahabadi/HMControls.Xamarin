@@ -1,9 +1,11 @@
-﻿using HMExtension.Xamarin;
+﻿using HMExtension.Maui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Xamarin.Forms;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 namespace HMControls
 {
@@ -26,10 +28,10 @@ namespace HMControls
             set => SetValue(TintColorProperty, value);
         }
 
-        public static readonly BindableProperty TintColorProperty = BindableProperty.Create("TintColor",
+        public static readonly BindableProperty TintColorProperty = BindableProperty.Create(nameof(TintColor),
             typeof(Color),
             typeof(ImageTinted),
-            defaultValue: Color.Black,
+            defaultValue: Colors.Black,
             propertyChanged: OnTintColorChanged);
 
         private static void OnTintColorChanged(BindableObject bindable, object oldValue, object newValue)
@@ -41,7 +43,7 @@ namespace HMControls
         private void OnTintColorChanged(Color newValue)
         {
             RemoveTintEffect();
-            if (newValue != Color.Black)
+            if (newValue != Colors.Black)
             {
                 AddTintEffect();
             }

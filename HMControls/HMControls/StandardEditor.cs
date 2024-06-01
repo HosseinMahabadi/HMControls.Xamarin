@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Xamarin.Forms;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 namespace HMControls
 {
@@ -19,7 +21,7 @@ namespace HMControls
             BindableProperty.Create(nameof(Padding), typeof(Thickness), typeof(StandardEditor), new Thickness(5));
 
         public static BindableProperty BorderColorProperty =
-            BindableProperty.Create(nameof(BorderColor), typeof(Color), typeof(StandardEditor), Color.Black);
+            BindableProperty.Create(nameof(BorderColor), typeof(Color), typeof(StandardEditor), Colors.Black);
 
         public int CornerRadius
         {

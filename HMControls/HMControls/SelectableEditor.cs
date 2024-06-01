@@ -2,25 +2,24 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
-using Xamarin.Forms;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 namespace HMControls
 {
     public class SelectableEditor : KeyboardlessEditor
     {
-        public override void ActionOnFocused()
-        {
-            if (Command.CanExecute(CommandParameter))
-            {
-                Command?.Execute(CommandParameter);
-            }
-        }
+        #region Bindable
 
         public static BindableProperty CommandProperty =
             BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(SelectableEditor), default);
 
         public static BindableProperty CommandParameterProperty =
             BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(SelectableEditor), null);
+
+        #endregion
+
+        #region Properties
 
         public ICommand Command
         {
@@ -33,5 +32,19 @@ namespace HMControls
             get => GetValue(CommandParameterProperty);
             set => SetValue(CommandParameterProperty, value);
         }
+
+        #endregion
+
+        #region Methods
+
+        public override void ActionOnFocused()
+        {
+            if (Command.CanExecute(CommandParameter))
+            {
+                Command?.Execute(CommandParameter);
+            }
+        }
+
+        #endregion
     }
 }

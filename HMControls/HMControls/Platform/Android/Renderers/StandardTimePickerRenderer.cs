@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel;
 using Android.Content;
 using Android.Graphics.Drawables;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.Android;
+using Android.Widget;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Platform;
 using HMControls;
 using HMControls.Platform.Android.Renderers;
-using Android.Widget;
 
 [assembly: ExportRenderer(typeof(StandardTimePicker), typeof(StandardTimePickerRenderer))]
 

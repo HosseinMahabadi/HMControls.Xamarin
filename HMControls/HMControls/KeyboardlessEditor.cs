@@ -2,23 +2,38 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Forms;
-using HMExtension.Xamarin;
-
+using HMExtension.Maui;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
+using sun.awt.im;
+using System.Runtime.CompilerServices;
+#if ANDROID
+using Android.Views;
+using Android.Content;
+using Android.Runtime;
+using Android.Views.InputMethods;
+using Android.Graphics.Drawables;
+#endif
 namespace HMControls
 {
-    public abstract class KeyboardlessEditor : StandardEditor
+    public abstract class KeyboardlessEditor : StandardEditor, ICustomControl
     {
         public KeyboardlessEditor()
         {
             Focused += KeyboardlessEditor_Focused;
         }
 
+        #region Properties
+
         private ContentPage MasterParent { get; set; } = null;
 
         private bool Focusable { get; set; } = true;
 
         private bool IsMasterParentAppear { get; set; } = true;
+
+        #endregion
+
+        #region Events
 
         private void KeyboardlessEditor_Focused(object sender, FocusEventArgs e)
         {
@@ -58,7 +73,26 @@ namespace HMControls
             IsMasterParentAppear = false;
         }
 
+        #endregion
+
+        #region Methods
+
         public abstract void ActionOnFocused();
 
+        protected override void OnPropertyChanging([CallerMemberName] string propertyName = null)
+        {
+            base.OnPropertyChanging(propertyName);
+            if (propertyName == IsFocusedProperty.PropertyName)
+            {
+#if ANDROID
+                // incase if the focus was moved from another Entry
+                // Forcefully dismiss the Keyboard 
+                InputMethodManager imm = (InputMethodManager)Context.GetSystemService(Context.InputMethodService);
+                imm.HideSoftInputFromWindow(Control.WindowToken, HideSoftInputFlags.None);
+#endif
+            }
+        }
+
+#endregion
     }
 }

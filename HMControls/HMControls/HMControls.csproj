@@ -1,12 +1,9 @@
-<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
-
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.1.2">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;MonoAndroid10.0;xamarinios10</TargetFrameworks>
-    <Version>1.0.8</Version>
-    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <Version>2.0.17</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Description>Include some usable controls for Xamarin Forms.
+    <Description>Include some usable controls for maui apps.
 
 https://instagram.com/hossein.mahabadi468</Description>
     <Copyright>Copyright (c) 2022-2027 Hossein Mahabadi</Copyright>
@@ -14,14 +11,24 @@ https://instagram.com/hossein.mahabadi468</Description>
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/HosseinMahabadi/HMControls.Xamarin</RepositoryUrl>
     <PackageLicenseFile>license.txt</PackageLicenseFile>
-    <PackageTags>C#, Xamarin, XamarinForms, UI, UserInterface, Xaml, Entry, Button, Control</PackageTags>
+    <PackageTags>C#, maui, Xamarin, XamarinForms, Maui, UI, UserInterface, Xaml, Entry, Button, Control</PackageTags>
     <Authors>Hossein Mahabadi</Authors>
     <Company>Hossein Mahabadi</Company>
+    <TargetFrameworks>net8.0-ios;net8.0-android;net8.0</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+    <UseMaui>True</UseMaui>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+    <OutputType>Library</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <SingleProject>true</SingleProject>
+    <Title>HM Maui Custom Controls</Title>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,22 +44,22 @@ https://instagram.com/hossein.mahabadi468</Description>
     <Compile Remove="Platform\iOS\Renderers\UITextFieldPadding.cs" />
     <Compile Remove="Platform\iOS\Renderers\UITextViewPadding.cs" />
   </ItemGroup>
-
   <ItemGroup>
-    <None Include="Platform\Android\Renderers\StandardEditorRenderer.cs" />
+    <None Include="Platform\Android\Renderers\KeyboardlessEditorRenderer.cs" />
+    <None Include="Platform\Android\Renderers\KeyboardlessEntryRenderer.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="HMControlsIcon.png">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>
+      </PackagePath>
     </None>
     <None Include="license.txt">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>
+      </PackagePath>
     </None>
-    <None Include="Platform\Android\Renderers\KeyboardlessEditorRenderer.cs" />
-    <None Include="Platform\Android\Renderers\KeyboardlessEntryRenderer.cs" />
+    <None Include="Platform\Android\Renderers\StandardEditorRenderer.cs" />
     <None Include="Platform\Android\Renderers\StandardEntryRenderer.cs" />
     <None Include="Platform\Android\Renderers\StandardPickerRenderer.cs" />
     <None Include="Platform\Android\Renderers\StandardSearchBarRenderer.cs" />
@@ -62,19 +69,10 @@ https://instagram.com/hossein.mahabadi468</Description>
     <None Include="Platform\iOS\Renderers\UITextFieldPadding.cs" />
     <None Include="Platform\iOS\Renderers\UITextViewPadding.cs" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="HMExtension.Xamarin" Version="2.1.7" />
-    <PackageReference Include="HMPopup" Version="1.0.26" />
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2515" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
+    <PackageReference Include="HMExtension.Maui" Version="3.0.15" />
+    <PackageReference Include="HMPopup" Version="2.0.69" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.40" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.40" />
   </ItemGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
-    <Compile Include="Platform\Android\Renderers\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('xamarinios')) ">
-    <Compile Include="Platform\iOS\Renderers\*.cs" />
-  </ItemGroup>
-</Project>
+  </Project>

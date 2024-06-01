@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace HMControls
+namespace HMControls;
+
+public enum RenderModeType
 {
-    public enum RenderModeType
-    {
-        Default,
-        Standard,
-    }
+    Default,
+    Standard,
 }

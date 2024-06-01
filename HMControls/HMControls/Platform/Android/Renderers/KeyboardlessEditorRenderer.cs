@@ -1,5 +1,5 @@
-﻿using Xamarin.Forms.Platform.Android;
-using XF = Xamarin.Forms;
+﻿using Microsoft.Maui.Platform;
+using Maui = Microsoft.Maui.Controls;
 using Android.Views;
 using Android.Content;
 using HMControls.Platform.Android.Renderers;
@@ -11,7 +11,7 @@ using Android.Graphics.Drawables;
 using System.ComponentModel;
 using HMControls;
 
-[assembly: XF.ExportRenderer(typeof(KeyboardlessEditor), typeof(KeyboardlessEditorRenderer))]
+[assembly: Maui.Compatibility.ExportRenderer(typeof(KeyboardlessEditor), typeof(KeyboardlessEditorRenderer))]
 
 namespace HMControls.Platform.Android.Renderers
 {
@@ -22,7 +22,7 @@ namespace HMControls.Platform.Android.Renderers
         public KeyboardlessEditorRenderer(Context context) : base(context)
         { }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<XF.Editor> e)
+        protected override void OnElementChanged(ElementChangedEventArgs<Maui.Editor> e)
         {
             base.OnElementChanged(e);
 
@@ -48,12 +48,12 @@ namespace HMControls.Platform.Android.Renderers
             }
         }
 
-        private void OnPropertyChanging(object sender, XF.PropertyChangingEventArgs e)
+        private void OnPropertyChanging(object sender, Maui.PropertyChangingEventArgs e)
         {
             try
             {
                 // Check if the view is about to get Focus
-                if (e.PropertyName == XF.VisualElement.IsFocusedProperty.PropertyName)
+                if (e.PropertyName == Maui.VisualElement.IsFocusedProperty.PropertyName)
                 {
                     // incase if the focus was moved from another Entry
                     // Forcefully dismiss the Keyboard 
