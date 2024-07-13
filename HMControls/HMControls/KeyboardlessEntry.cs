@@ -7,12 +7,15 @@ using Microsoft.Maui.Controls;
 using Microsoft.Maui;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using sun.awt.im;
-using Microsoft.Maui.Controls.PlatformConfiguration;
-#if ANDROID
+#if WINDOWS
+using Microsoft.UI.Xaml.Controls;
+#elif ANDROID
 using Android.Views;
 using Android.Content;
 using Android.Graphics.Drawables;
+using Android.Runtime;
+using Android.Views.InputMethods;
+using Android.Widget;
 #endif
 
 namespace HMControls;
@@ -23,57 +26,29 @@ public abstract class KeyboardlessEntry : StandardEntry
     {
         try
         {
+            TapGestureRecognizer tapGesture = new()
+            {
+                Command = new Command(() => 
+                {
+                    if(ReadyForTap)
+                    {
+                        ActionOnFocused();
+                    }
+                }),
+            };
+            GestureRecognizers.Add(tapGesture);
+
             Focused += KeyboardlessEntry_Focused;
-            HandlerChanged += KeyboardlessEntry_HandlerChanged;
+            Unfocused += (s, e) =>
+            {
+                ReadyForTap = false;
+            };
         }
         catch(Exception ex)
         {
-            Debug.WriteLine($"KeyboardlessEntry ERROR!!! => {ex.Message}");
-        }
-    }
+            Debug.WriteLine(ex.GetErrorMessage());
 
-    private void KeyboardlessEntry_HandlerChanged(object sender, EventArgs e)
-    {
-        try
-        {
-            if (sender is KeyboardlessEntry control)
-            {
-                control.PropertyChanging += Control_PropertyChanging;
-#if ANDROID
-                var view = control.Handler.PlatformView as Android.Widget.EditText;
-
-                // Disable the Keyboard on Focus
-                view.ShowSoftInputOnFocus = false;
-                view.SetCursorVisible(false);
-#endif
-            }
         }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine("SelectableEditor --> " + ex.TargetSite + " " + ex.Message);
-        }
-    }
-
-    private void Control_PropertyChanging(object sender, PropertyChangingEventArgs e)
-    {
-#if ANDROID
-            try
-            {
-                // Check if the view is about to get Focus
-                if (e.PropertyName == Maui.VisualElement.IsFocusedProperty.PropertyName)
-                {
-                    // incase if the focus was moved from another Entry
-                    // Forcefully dismiss the Keyboard 
-                    InputMethodManager imm = (InputMethodManager)Context.GetSystemService(Context.InputMethodService);
-                    var view = control.Handler.PlatformView as Android.Widget.EditText;
-                    imm.HideSoftInputFromWindow(view.WindowToken, HideSoftInputFlags.None);
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("SelectableEditor --> " + ex.TargetSite + " " + ex.Message);
-            }
-#endif
     }
 
     #region Properties
@@ -83,6 +58,8 @@ public abstract class KeyboardlessEntry : StandardEntry
     private bool Focusable { get; set; } = true;
 
     private bool IsMasterParentAppear { get; set; } = true;
+
+    private bool ReadyForTap { get; set; } = false;
 
     #endregion
 
@@ -106,6 +83,7 @@ public abstract class KeyboardlessEntry : StandardEntry
         if (Focusable && IsMasterParentAppear)
         {
             ActionOnFocused();
+            ReadyForTap = true;
         }
         else
         {
@@ -130,31 +108,48 @@ public abstract class KeyboardlessEntry : StandardEntry
 
     #region Methods
 
-    private void ThisOnPropertyChanging()
-    { }
-    public abstract void ActionOnFocused();
-
     protected override void OnPropertyChanging([CallerMemberName] string propertyName = null)
     {
+        if(propertyName == IsFocusedProperty.PropertyName)
+        {
+#if ANDROID
+            var context = Platform.AppContext;
+            var inputMethodManager = context.GetSystemService(Context.InputMethodService) as InputMethodManager;
+            if (inputMethodManager != null)
+            {
+                var activity = Platform.CurrentActivity;
+                var token = activity.CurrentFocus?.WindowToken;
+                inputMethodManager.HideSoftInputFromWindow(token, HideSoftInputFlags.None);
+                activity.Window.DecorView.ClearFocus();
+            }
+#endif
+        }
         base.OnPropertyChanging(propertyName);
+    }
 
+    public abstract void ActionOnFocused();
+
+    protected override void ModifyCustomControl()
+    {
         try
         {
-            if (propertyName == IsFocusedProperty.PropertyName)
-            {
+            base.ModifyCustomControl();
 #if ANDROID
-                // incase if the focus was moved from another Entry
-                // Forcefully dismiss the Keyboard
-                var view = (Handler.PlatformView as Android.Widget.EditText);
-                InputMethodManager imm = (InputMethodManager)Context.GetSystemService(Context.InputMethodService);
-                imm.HideSoftInputFromWindow(view.WindowToken, HideSoftInputFlags.None);
+            var view = Handler.PlatformView as EditText;
+
+            // Disable the Keyboard on Focus
+            view.ShowSoftInputOnFocus = false;
+            view.SetCursorVisible(false);
+#elif WINDOWS
+            var view = Handler.PlatformView as TextBox;
+            view.IsReadOnly = true;
 #endif
-            }
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
+            System.Diagnostics.Debug.WriteLine("SelectableEditor --> " + ex.TargetSite + " " + ex.Message);
         }
     }
+
 #endregion
 }

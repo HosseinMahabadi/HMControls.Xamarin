@@ -6,20 +6,42 @@ using Microsoft.Maui.Controls;
 using Microsoft.Maui;
 using System.Runtime.CompilerServices;
 using Microsoft.Maui.Platform;
-#if ANDROID
+using System.Diagnostics;
+using HMExtension.Maui;
+
+#if WINDOWS
+using Microsoft.UI.Xaml.Controls;
+#elif ANDROID
 using Android.Content;
 using Android.Graphics.Drawables;
-using Android.Widget;
-using AV = Android.Views;
+//using Android.Widget;
+using AndroidX.AppCompat.Widget;
 #endif
 
 namespace HMControls;
 
 public class StandardSearchBar : SearchBar
 {
+    public StandardSearchBar()
+    {
+        try
+        {
+            HandlerChanged += (s, e) =>
+            {
+                ModifyCustomControl();
+                PropertyChanged += StandardSearchBar_PropertyChanged;
+            };
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.GetErrorMessage());
+        }
+    }
+
     #region Bidables
 
-    public static BindableProperty CornerRadiusProperty = BindableProperty.Create(nameof(CornerRadius), 
+    public static readonly BindableProperty CornerRadiusProperty = BindableProperty.Create(
+        nameof(CornerRadius), 
         typeof(int), 
         typeof(StandardSearchBar), 
         0);
@@ -74,60 +96,94 @@ public class StandardSearchBar : SearchBar
 
     #region Methods
 
-    protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected virtual void ModifyCustomControl()
     {
-        if (propertyName == CornerRadiusProperty.PropertyName)
+        try
         {
-#if ANDROID
-            UpdateBackgroundAndroid(ref Handler.PlatformView as SearchView);
-#endif
-        }
-        else if (propertyName == BorderThicknessProperty.PropertyName)
-        {
-#if ANDROID
-            UpdateBackgroundAndroid(ref Handler.PlatformView as SearchView);
-#endif
-        }
-        else if (propertyName == BorderColorProperty.PropertyName)
-        {
-#if ANDROID
-            UpdateBackgroundAndroid(ref Handler.PlatformView as SearchView);
-#endif
-        }
-
-        base.OnPropertyChanged(propertyName);
-    }
-
-#if ANDROID
-    protected void UpdateBackgroundAndroid(ref SearchView control)
-    {
-        if (control != null)
-        {
-            if (RenderMode == RenderModeType.Standard)
+            if (Handler != null)
             {
-                int searchPlateId = control.Context.Resources.GetIdentifier("android:id/search_plate", null, null);
-                AV.View searchPlateView = control.FindViewById(searchPlateId);
-
-                var gd = new GradientDrawable();
-                gd.SetColor(BackgroundColor.ToPlatform());
-                gd.SetCornerRadius(Context.ToPixels(CornerRadius));
-                gd.SetStroke((int)Context.ToPixels(BorderThickness), BorderColor.ToAndroid());
-                control.SetBackground(gd);
-
-                var tgd = new GradientDrawable();
-                tgd.SetStroke(0, BorderColor.ToPlatform());
-                searchPlateView.SetBackground(tgd);
-
-                var padTop = (int)Context.ToPixels(Padding.Top);
-                var padBottom = (int)Context.ToPixels(Padding.Bottom);
-                var padLeft = (int)Context.ToPixels(Padding.Left);
-                var padRight = (int)Context.ToPixels(Padding.Right);
-
-                control.SetPadding(padLeft, padTop, padRight, padBottom);
+                UpdateBackground(Handler.PlatformView);
             }
         }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.GetErrorMessage());
+        }
     }
-#endif
 
-#endregion
+    private void UpdateBackground(object platformView)
+    {
+        try
+        {
+#if ANDROID
+            var control = platformView as SearchView;
+            
+            if (control != null)
+            {
+                if (RenderMode == RenderModeType.Standard)
+                {
+                    int searchPlateId = control.Context.Resources.GetIdentifier("android:id/search_plate", null, null);
+                    Android.Views.View searchPlateView = control.FindViewById(searchPlateId);
+
+                    var bd = new BorderDrawable(control.Context);
+                    bd.SetBackgroundColor(BackgroundColor.ToPlatform());
+                    bd.SetCornerRadius(new Microsoft.Maui.CornerRadius(CornerRadius, CornerRadius, CornerRadius, CornerRadius));
+                    bd.SetBorderWidth(BorderThickness);
+                    bd.SetBorderColor(BorderColor.ToPlatform());
+                    var density = DeviceDisplay.MainDisplayInfo.Density;
+                    int padTop = (int)(Padding.Top * density);
+                    int padBottom = (int)(Padding.Bottom * density);
+                    int padLeft = (int)(Padding.Left * density);
+                    int padRight = (int)(Padding.Right * density);
+                    bd.SetPadding(new Android.Graphics.Rect(padLeft, padTop, padRight, padBottom));
+                    control.SetBackgroundDrawable(bd);
+
+                    var tgd = new GradientDrawable();
+                    tgd.SetStroke(0, BorderColor.ToPlatform());
+                    searchPlateView.SetBackgroundDrawable(tgd);
+                }
+            }
+#elif WINDOWS
+            var control = platformView as TextBox;
+            if (control != null)
+            {
+                if (RenderMode == RenderModeType.Standard)
+                {
+                    control.BorderThickness = new Microsoft.UI.Xaml.Thickness(BorderThickness);
+                    control.BorderBrush = BorderColor.ToPlatform();
+                    control.CornerRadius = new Microsoft.UI.Xaml.CornerRadius(CornerRadius);
+                    control.Padding = new Microsoft.UI.Xaml.Thickness(Padding.Left, Padding.Top, Padding.Right, Padding.Bottom);
+                }
+            }
+#endif
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    private void StandardSearchBar_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        try
+        {
+            if (e.PropertyName == BackgroundColorProperty.PropertyName ||
+                e.PropertyName == CornerRadiusProperty.PropertyName ||
+                e.PropertyName == BorderColorProperty.PropertyName ||
+                e.PropertyName == BorderThicknessProperty.PropertyName ||
+                e.PropertyName == PaddingProperty.PropertyName)
+            {
+                if (Handler != null)
+                {
+                    UpdateBackground(Handler.PlatformView);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.GetErrorMessage());
+        }
+    }
+
+    #endregion
 }

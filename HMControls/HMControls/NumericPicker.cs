@@ -23,26 +23,40 @@ public class NumericPicker : KeyboardlessEntry
 
     #region Bindables
 
-    public static BindableProperty MinValueProperty =
-        BindableProperty.Create(nameof(MinValue), typeof(int), typeof(NumericPicker), 0, propertyChanged: OnRangeChanged);
+    public static readonly BindableProperty MinValueProperty = BindableProperty.Create(nameof(MinValue), 
+        typeof(int), 
+        typeof(NumericPicker), 
+        0, 
+        propertyChanged: OnRangeChanged);
 
-    public static BindableProperty MaxValueProperty =
-        BindableProperty.Create(nameof(MaxValue), typeof(int), typeof(NumericPicker), 0, propertyChanged: OnRangeChanged);
+    public static readonly BindableProperty MaxValueProperty = BindableProperty.Create(nameof(MaxValue), 
+        typeof(int), 
+        typeof(NumericPicker), 
+        0, 
+        propertyChanged: OnRangeChanged);
 
-    public static BindableProperty SelectedItemProperty =
-        BindableProperty.Create(nameof(SelectedItem), typeof(int), typeof(NumericPicker));
+    public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(
+        nameof(SelectedItem), 
+        typeof(int), 
+        typeof(NumericPicker));
 
-    public static BindableProperty TitleProperty =
-        BindableProperty.Create(nameof(Title), typeof(string), typeof(NumericPicker), null);
+    public static readonly BindableProperty TitleProperty = BindableProperty.Create(
+        nameof(Title), 
+        typeof(string), 
+        typeof(NumericPicker), 
+        null);
 
-    public static BindableProperty MessageProperty =
-        BindableProperty.Create(nameof(Message), typeof(string), typeof(NumericPicker), null);
+    public static readonly BindableProperty MessageProperty = BindableProperty.Create(
+        nameof(Message), 
+        typeof(string), 
+        typeof(NumericPicker), 
+        null);
 
     #endregion
 
     #region Properties
 
-    private List<int> Items { get; set; } = new List<int>() { 0 };
+    private List<int> Items { get; set; } = [ 0 ];
 
     public int MinValue
     {
@@ -74,7 +88,7 @@ public class NumericPicker : KeyboardlessEntry
         set => SetValue(MessageProperty, value);
     }
 
-    private Popup Popup { get; set; } = new ()
+    public Popup Popup { get; set; } = new ()
     {
         FlowDirection = FlowDirection.RightToLeft,
         OkTitle = "تایید",

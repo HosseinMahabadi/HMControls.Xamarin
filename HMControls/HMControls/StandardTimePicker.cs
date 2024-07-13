@@ -7,25 +7,32 @@ using Microsoft.Maui;
 using System.Diagnostics;
 using Microsoft.Maui.Platform;
 using System.Runtime.CompilerServices;
+using HMExtension.Maui;
 #if ANDROID
 using Android.Content;
 using Android.Graphics.Drawables;
 using Android.Widget;
+#elif WINDOWS
+using Microsoft.UI.Xaml.Controls;
 #endif
 
 namespace HMControls;
 
-public class StandardTimePicker : TimePicker, ICustomControl
+public class StandardTimePicker : Microsoft.Maui.Controls.TimePicker
 {
     public StandardTimePicker()
     {
         try
         {
-            ModifyCustomControl();
+            HandlerChanged += (s, e) =>
+            {
+                ModifyCustomControl();
+                PropertyChanged += StandardTimePicker_PropertyChanged;
+            };
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            Debug.WriteLine($"StandardTimePicker ERROR!!! => {ex.Message}");
+            Debug.WriteLine(ex.GetErrorMessage());
         }
     }
 
@@ -82,12 +89,35 @@ public class StandardTimePicker : TimePicker, ICustomControl
 
     #region Methods
 
-    private void ModifyCustomControl()
+    private void StandardTimePicker_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         try
         {
-#if ANDROID
-            UpdateBackgroundAndroid(ref Handler.PlatformView as EditText); 
+            if (e.PropertyName == BackgroundColorProperty.PropertyName ||
+                e.PropertyName == CornerRadiusProperty.PropertyName ||
+                e.PropertyName == BorderColorProperty.PropertyName ||
+                e.PropertyName == BorderThicknessProperty.PropertyName ||
+                e.PropertyName == PaddingProperty.PropertyName)
+            {
+                if (Handler != null)
+                {
+                    UpdateBackground(Handler.PlatformView);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.GetErrorMessage());
+        }
+
+    }
+
+    protected virtual void ModifyCustomControl()
+    {
+        try
+        {
+#if ANDROID_
+            UpdateBackgroundAndroid(Handler.PlatformView as EditText); 
 #endif
         }
         catch (Exception ex)
@@ -96,53 +126,43 @@ public class StandardTimePicker : TimePicker, ICustomControl
         }
     }
 
-    protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    private void UpdateBackground(object platformView)
     {
-        if (propertyName == CornerRadiusProperty.PropertyName)
-        {
 #if ANDROID
-            UpdateBackgroundAndroid(ref Handler.PlatformView as EditText);
-#endif
-        }
-        else if (propertyName == BorderThicknessProperty.PropertyName)
-        {
-#if ANDROID
-            UpdateBackgroundAndroid(ref Handler.PlatformView as EditText);
-#endif
-        }
-        else if (propertyName == BorderColorProperty.PropertyName)
-        {
-#if ANDROID
-            UpdateBackgroundAndroid(ref Handler.PlatformView as EditText);
-#endif
-        }
+        var control = platformView as EditText;
 
-        base.OnPropertyChanged(propertyName);
-    }
-
-#if ANDROID
-    protected void UpdateBackgroundAndroid(ref EditText control)
-    {
         if (control != null)
         {
             if (RenderMode == RenderModeType.Standard)
             {
-                var gd = new GradientDrawable();
-                gd.SetColor(BackgroundColor.ToPlatform());
-                gd.SetCornerRadius(Context.ToPixels(CornerRadius));
-                gd.SetStroke((int)Context.ToPixels(BorderThickness), BorderColor.ToPlatform());
-                control.SetBackground(gd);
-
-                var padTop = (int)Context.ToPixels(Padding.Top);
-                var padBottom = (int)Context.ToPixels(Padding.Bottom);
-                var padLeft = (int)Context.ToPixels(Padding.Left);
-                var padRight = (int)Context.ToPixels(Padding.Right);
-
-                control.SetPadding(padLeft, padTop, padRight, padBottom);
+                var bd = new BorderDrawable(control.Context);
+                bd.SetBackgroundColor(BackgroundColor.ToPlatform());
+                bd.SetCornerRadius(new Microsoft.Maui.CornerRadius(CornerRadius, CornerRadius, CornerRadius, CornerRadius));
+                bd.SetBorderWidth(BorderThickness);
+                bd.SetBorderColor(BorderColor.ToPlatform());
+                var density = DeviceDisplay.MainDisplayInfo.Density;
+                int padTop = (int)(Padding.Top * density);
+                int padBottom = (int)(Padding.Bottom * density);
+                int padLeft = (int)(Padding.Left * density);
+                int padRight = (int)(Padding.Right * density);
+                bd.SetPadding(new Android.Graphics.Rect(padLeft, padTop, padRight, padBottom));
+                control.SetBackgroundDrawable(bd);
             }
         }
-    }
+#elif WINDOWS
+        var control = platformView as TextBox;
+        if (control != null)
+        {
+            if (RenderMode == RenderModeType.Standard)
+            {
+                control.BorderThickness = new Microsoft.UI.Xaml.Thickness(BorderThickness);
+                control.BorderBrush = BorderColor.ToPlatform();
+                control.CornerRadius = new Microsoft.UI.Xaml.CornerRadius(CornerRadius);
+                control.Padding = new Microsoft.UI.Xaml.Thickness(Padding.Left, Padding.Top, Padding.Right, Padding.Bottom);
+            }
+        }
 #endif
+    }
 
-#endregion
+    #endregion
 }

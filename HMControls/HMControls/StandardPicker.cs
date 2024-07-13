@@ -7,43 +7,61 @@ using Microsoft.Maui;
 using Microsoft.Maui.Platform;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using HMExtension.Maui;
 #if ANDROID
 using Android.Content;
 using Android.Graphics.Drawables;
 using Android.Widget;
+#elif WINDOWS
+using Microsoft.UI.Xaml.Controls;
 #endif
 
 namespace HMControls;
 
-public class StandardPicker : Picker, ICustomControl
+public class StandardPicker : Picker
 {
     public StandardPicker()
     {
         try
         {
-            ModifyCustomControl();
+            HandlerChanged += (s, e) =>
+            {
+                ModifyCustomControl();
+                PropertyChanged += StandardPicker_PropertyChanged;
+            };
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            Debug.WriteLine($"StandardPicker ERROR!!! => {ex.Message}");
+            Debug.WriteLine(ex.GetErrorMessage());
         }
     }
+
+
     #region Bindables
 
-    public static BindableProperty CornerRadiusProperty =
-        BindableProperty.Create(nameof(CornerRadius), typeof(int), typeof(StandardPicker), 0);
+    public static readonly BindableProperty CornerRadiusProperty = BindableProperty.Create(
+        nameof(CornerRadius), 
+        typeof(int), 
+        typeof(StandardPicker), 
+        5);
 
-    public static BindableProperty BorderThicknessProperty =
-        BindableProperty.Create(nameof(BorderThickness), typeof(double), typeof(StandardPicker), 1d);
+    public static readonly BindableProperty BorderThicknessProperty = BindableProperty.Create(
+        nameof(BorderThickness), 
+        typeof(double), 
+        typeof(StandardPicker), 
+        1d);
 
-    public static BindableProperty PaddingProperty =
-        BindableProperty.Create(nameof(Padding), typeof(Thickness), typeof(StandardPicker), new Thickness(5));
+    public static readonly BindableProperty PaddingProperty = BindableProperty.Create(
+        nameof(Padding), 
+        typeof(Thickness), 
+        typeof(StandardPicker), 
+        new Thickness(5));
 
-    public static BindableProperty BorderColorProperty =
-        BindableProperty.Create(nameof(BorderColor), typeof(Color), typeof(StandardPicker), Colors.Black);
-
-    /*public static BindableProperty ForceEnglishDigitsProperty =
-        BindableProperty.Create(nameof(ForceEnglishDigits), typeof(bool), typeof(StandardEntry), false);*/
+    public static readonly BindableProperty BorderColorProperty = BindableProperty.Create(
+        nameof(BorderColor), 
+        typeof(Color), 
+        typeof(StandardPicker), 
+        Colors.Black);
 
     #endregion
 
@@ -80,67 +98,81 @@ public class StandardPicker : Picker, ICustomControl
 
     #region Methods
 
-    private void ModifyCustomControl()
+    protected virtual void ModifyCustomControl()
     {
         try
         {
-#if ANDROID
-            UpdateBackgroundAndroid(ref Handler.PlatformView as EditText); 
-#endif
+            if (Handler != null)
+            {
+                UpdateBackground(Handler.PlatformView);
+            }
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
+            Debug.WriteLine(ex.GetErrorMessage());
         }
     }
 
-    protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    private void StandardPicker_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (propertyName == CornerRadiusProperty.PropertyName)
+        try
         {
-#if ANDROID
-            UpdateBackgroundAndroid(ref Handler.PlatformView as EditText);
-#endif
+            if (e.PropertyName == BackgroundColorProperty.PropertyName ||
+                e.PropertyName == CornerRadiusProperty.PropertyName ||
+                e.PropertyName == BorderColorProperty.PropertyName ||
+                e.PropertyName == BorderThicknessProperty.PropertyName ||
+                e.PropertyName == PaddingProperty.PropertyName)
+            {
+                if (Handler != null)
+                {
+                    UpdateBackground(Handler.PlatformView);
+                }
+            }
         }
-        else if (propertyName == BorderThicknessProperty.PropertyName)
+        catch (Exception ex)
         {
-#if ANDROID
-            UpdateBackgroundAndroid(ref Handler.PlatformView as EditText);
-#endif
-        }
-        else if (propertyName == BorderColorProperty.PropertyName)
-        {
-#if ANDROID
-            UpdateBackgroundAndroid(ref Handler.PlatformView as EditText);
-#endif
+            Debug.WriteLine(ex.GetErrorMessage());
         }
 
-        base.OnPropertyChanged(propertyName);
     }
 
-#if ANDROID
-    protected void UpdateBackgroundAndroid(ref EditText control)
+    private void UpdateBackground(object platformView)
     {
+#if ANDROID
+        var control = platformView as EditText;
+
         if (control != null)
         {
             if (RenderMode == RenderModeType.Standard)
             {
-                var gd = new GradientDrawable();
-                gd.SetColor(BackgroundColor.ToPlatform());
-                gd.SetCornerRadius(Context.ToPixels(CornerRadius));
-                gd.SetStroke((int)Context.ToPixels(BorderThickness), BorderColor.ToPlatform());
-                control.SetBackground(gd);
-
-                var padTop = (int)Context.ToPixels(Padding.Top);
-                var padBottom = (int)Context.ToPixels(Padding.Bottom);
-                var padLeft = (int)Context.ToPixels(Padding.Left);
-                var padRight = (int)Context.ToPixels(Padding.Right);
-
-                control.SetPadding(padLeft, padTop, padRight, padBottom);
+                var bd = new BorderDrawable(control.Context);
+                bd.SetBackgroundColor(BackgroundColor.ToPlatform());
+                bd.SetCornerRadius(new Microsoft.Maui.CornerRadius(CornerRadius, CornerRadius, CornerRadius, CornerRadius));
+                bd.SetBorderWidth(BorderThickness);
+                bd.SetBorderColor(BorderColor.ToPlatform());
+                var density = DeviceDisplay.MainDisplayInfo.Density;
+                int padTop = (int)(Padding.Top * density);
+                int padBottom = (int)(Padding.Bottom * density);
+                int padLeft = (int)(Padding.Left * density);
+                int padRight = (int)(Padding.Right * density);
+                bd.SetPadding(new Android.Graphics.Rect(padLeft, padTop, padRight, padBottom));
+                control.SetBackgroundDrawable(bd);
             }
         }
+#elif WINDOWS
+        var control = platformView as TextBox;
+        if (control != null)
+        {
+            if (RenderMode == RenderModeType.Standard)
+            {
+                control.BorderThickness = new Microsoft.UI.Xaml.Thickness(BorderThickness);
+                control.BorderBrush = BorderColor.ToPlatform();
+                control.CornerRadius = new Microsoft.UI.Xaml.CornerRadius(CornerRadius);
+                control.Padding = new Microsoft.UI.Xaml.Thickness(Padding.Left, Padding.Top, Padding.Right, Padding.Bottom);
+            }
+        }
+ #endif
     }
-#endif
 
-#endregion
+    #endregion
 }

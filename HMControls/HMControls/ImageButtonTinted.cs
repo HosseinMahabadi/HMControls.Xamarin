@@ -26,12 +26,7 @@ public class ImageButtonTinted : ImageButton
     private static void OnTintColorChanged(BindableObject bindable, object oldValue, object newValue)
     {
         ImageButtonTinted current = (ImageButtonTinted)bindable;
-        current.OnTintColorChanged((Color)newValue);
-    }
-
-    private void OnTintColorChanged(Color newValue)
-    {
-        AddTintEffect();
+        current.AddTintEffect();
     }
 
     private void RemoveTintEffect()

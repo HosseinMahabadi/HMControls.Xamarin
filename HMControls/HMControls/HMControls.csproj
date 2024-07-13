@@ -1,19 +1,22 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.1.2">
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
   <PropertyGroup>
-    <Version>2.0.17</Version>
+    <Version>2.0.61</Version>
+    <Title>HM Maui Custom Controls</Title>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Description>Include some usable controls for maui apps.
 
 https://instagram.com/hossein.mahabadi468</Description>
-    <Copyright>Copyright (c) 2022-2027 Hossein Mahabadi</Copyright>
+
     <PackageIcon>HMControlsIcon.png</PackageIcon>
-    <PackageIconUrl />
-    <RepositoryUrl>https://github.com/HosseinMahabadi/HMControls.Xamarin</RepositoryUrl>
+    <Copyright>Copyright (c) 2022-2027 Hossein Mahabadi</Copyright>
     <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>Support Microsoft Maui</PackageReleaseNotes>
     <PackageTags>C#, maui, Xamarin, XamarinForms, Maui, UI, UserInterface, Xaml, Entry, Button, Control</PackageTags>
     <Authors>Hossein Mahabadi</Authors>
     <Company>Hossein Mahabadi</Company>
+    <RepositoryUrl>https://github.com/HosseinMahabadi/HMControls.Xamarin</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/HosseinMahabadi/HMControls.Xamarin</PackageProjectUrl>
     <TargetFrameworks>net8.0-ios;net8.0-android;net8.0</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
     <UseMaui>True</UseMaui>
@@ -24,30 +27,17 @@ https://instagram.com/hossein.mahabadi468</Description>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
     <OutputType>Library</OutputType>
     <ImplicitUsings>enable</ImplicitUsings>
-    <SingleProject>true</SingleProject>
-    <Title>HM Maui Custom Controls</Title>
+    <SingleProject>true</SingleProject>   
   </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <Optimize>true</Optimize>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <Compile Remove="Platform\Android\Renderers\KeyboardlessEditorRenderer.cs" />
-    <Compile Remove="Platform\Android\Renderers\KeyboardlessEntryRenderer.cs" />
-    <Compile Remove="Platform\Android\Renderers\StandardEditorRenderer.cs" />
-    <Compile Remove="Platform\Android\Renderers\StandardEntryRenderer.cs" />
-    <Compile Remove="Platform\Android\Renderers\StandardPickerRenderer.cs" />
-    <Compile Remove="Platform\Android\Renderers\StandardSearchBarRenderer.cs" />
-    <Compile Remove="Platform\Android\Renderers\StandardTimePickerRenderer.cs" />
-    <Compile Remove="Platform\iOS\Renderers\iOSStandardEditorRenderer.cs" />
-    <Compile Remove="Platform\iOS\Renderers\iOSStandardEntryRenderer.cs" />
-    <Compile Remove="Platform\iOS\Renderers\UITextFieldPadding.cs" />
-    <Compile Remove="Platform\iOS\Renderers\UITextViewPadding.cs" />
+    <EmbeddedResource Remove="C:\Users\Hossein Mahabadi\.nuget\packages\hmextension.maui\3.0.15\contentFiles\any\net8.0-ios17.2\Platform\Android\Resources\values\styles.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Platform\Android\Renderers\KeyboardlessEditorRenderer.cs" />
-    <None Include="Platform\Android\Renderers\KeyboardlessEntryRenderer.cs" />
-  </ItemGroup>
+  
   <ItemGroup>
     <None Include="HMControlsIcon.png">
       <Pack>True</Pack>
@@ -59,20 +49,12 @@ https://instagram.com/hossein.mahabadi468</Description>
       <PackagePath>
       </PackagePath>
     </None>
-    <None Include="Platform\Android\Renderers\StandardEditorRenderer.cs" />
-    <None Include="Platform\Android\Renderers\StandardEntryRenderer.cs" />
-    <None Include="Platform\Android\Renderers\StandardPickerRenderer.cs" />
-    <None Include="Platform\Android\Renderers\StandardSearchBarRenderer.cs" />
-    <None Include="Platform\Android\Renderers\StandardTimePickerRenderer.cs" />
-    <None Include="Platform\iOS\Renderers\iOSStandardEditorRenderer.cs" />
-    <None Include="Platform\iOS\Renderers\iOSStandardEntryRenderer.cs" />
-    <None Include="Platform\iOS\Renderers\UITextFieldPadding.cs" />
-    <None Include="Platform\iOS\Renderers\UITextViewPadding.cs" />
   </ItemGroup>
+  
   <ItemGroup>
-    <PackageReference Include="HMExtension.Maui" Version="3.0.15" />
-    <PackageReference Include="HMPopup" Version="2.0.69" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.40" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.40" />
+    <PackageReference Include="HMExtension.Maui" Version="3.0.18" />
+    <PackageReference Include="HMPopup" Version="2.0.89" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.70" />
   </ItemGroup>
   </Project>

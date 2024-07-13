@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ctrl="clr-namespace:HMControls;assembly=HMControls"
+             xmlns:me="clr-namespace:HMControlsSample"
              x:Class="HMControlsSample.MainPage">
 
     <ScrollView>
@@ -10,11 +11,20 @@
             Spacing="5">
             <ctrl:StandardEntry Text="Standard Entry" 
                                 Placeholder="Standard Entry"
-                                BorderThickness="1.5"
-                                BorderColor="Orange"
-                                CornerRadius="20" 
-                                BackgroundColor="Red"
-                                RenderMode="Standard"/>
+                                CornerRadius="10"
+                                BorderThickness="2"
+                                BorderColor="SteelBlue"
+                                BackgroundColor="AliceBlue"
+                                TextColor="Black"
+                                Padding="10"/>
+
+            <me:MyKeyboardlessEntry Text="KeyboardlessEntry"
+                                    CornerRadius="10"
+                                    BorderThickness="2"
+                                    BorderColor="SteelBlue"
+                                    BackgroundColor="AliceBlue"
+                                    TextColor="Black"
+                                    Padding="10"/>
         </VerticalStackLayout>
     </ScrollView>
 
