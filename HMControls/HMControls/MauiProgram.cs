@@ -6,10 +6,10 @@ namespace HMControls;
 public static class MauiProgram
 {
 
-    public static MauiAppBuilder ConfigureHMControls(this MauiAppBuilder builder)
+    public static MauiAppBuilder UseHMControls(this MauiAppBuilder builder)
     {
         builder
-            .ConfigureHMPopup();
+            .UseHMPopup();
         return builder;
     }
 }
