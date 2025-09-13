@@ -29,6 +29,7 @@ public class StandardEditor : Editor
             HandlerChanged += (s, e) =>
             {
                 ModifyCustomControl();
+                PropertyChanged -= StandardEditor_PropertyChanged;
                 PropertyChanged += StandardEditor_PropertyChanged;
             };
         }
@@ -86,9 +87,6 @@ public class StandardEditor : Editor
         get => (Color)GetValue(BorderColorProperty);
         set => SetValue(BorderColorProperty, value);
     }
-    /// <summary>
-    /// This property cannot be changed at runtime in iOS.
-    /// </summary>
     public Thickness Padding
     {
         get => (Thickness)GetValue(PaddingProperty);
@@ -138,10 +136,12 @@ public class StandardEditor : Editor
 
     private void UpdateBackground(object platformView)
     {
+        try
+        {
 #if ANDROID
-            var control = platformView as EditText;
-            
-            if (control != null)
+            //var control = platformView as AppCompatEditText;
+            //Debug.WriteLine($"Editor platformView is: {platformView}");
+            if (platformView is AppCompatEditText control)
             {
                 if (RenderMode == RenderModeType.Standard)
                 {
@@ -156,7 +156,7 @@ public class StandardEditor : Editor
                     int padLeft = (int)(Padding.Left * density);
                     int padRight = (int)(Padding.Right * density);
                     bd.SetPadding(new Android.Graphics.Rect(padLeft, padTop, padRight, padBottom));
-                    control.SetBackgroundDrawable(bd);
+                    control.Background = bd;
                 }
             }
 #elif WINDOWS
@@ -172,6 +172,11 @@ public class StandardEditor : Editor
                 }
             }
 #endif
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     #endregion

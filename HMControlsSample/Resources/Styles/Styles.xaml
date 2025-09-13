@@ -2,7 +2,8 @@
 <?xaml-comp compile="true" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:HMControls;assembly=HMControls">
 
     <Style TargetType="ActivityIndicator">
         <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
@@ -110,26 +111,105 @@
         </Setter>
     </Style>
 
-    <Style TargetType="Entry">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
-        <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
-        <Setter Property="MinimumHeightRequest" Value="44"/>
-        <Setter Property="MinimumWidthRequest" Value="44"/>
+    <Style TargetType="Entry" x:Key="EntryStyle">
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontFamily" Value="samim"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource MainLightColor}, 
+               Light={StaticResource MainDarkColor}}"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource MainDarkColorControls}, 
+               Light={StaticResource MainLightColorControls}}"/>
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Dark=Silver, 
+               Light=Gray}"/>
+        <Setter Property="ClearButtonVisibility" Value="WhileEditing"/>
+    </Style>
+
+    <Style TargetType="controls:StandardEntry" x:Key="StandardEntryStyle" BasedOn="{StaticResource EntryStyle}">
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="8,8,20,8"/>
+        <Setter Property="HeightRequest" Value="40"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
-                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BorderColor" Value="{AppThemeBinding Dark={StaticResource LightPrimaryColor},
+                                   Light={StaticResource DarkPrimaryLitColor}}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <VisualState x:Name="Focused">
+                        <VisualState.Setters>
+                            <Setter Property="BorderColor" Value="{AppThemeBinding Dark={StaticResource SecondaryColor},
+                                   Light={StaticResource ThirdColor}}"/>
+                            <Setter Property="BorderThickness" Value="1.5"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark=black, Light=white}"/>
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
             </VisualStateGroupList>
         </Setter>
+    </Style>
+
+    <Style TargetType="controls:SelectableEditor" x:Key="SelectableEditorStyle">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="20,10"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource MainLightColor}, 
+               Light={StaticResource MainDarkColor}}"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource MainDarkColorControls}, 
+               Light={StaticResource MainLightColorControls}}"/>
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Dark={StaticResource MainLightColor}, 
+               Light={StaticResource MainDarkColor}}"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BorderColor" Value="{AppThemeBinding Dark={StaticResource LightPrimaryColor},
+                                   Light={StaticResource DarkPrimaryLitColor}}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <VisualState x:Name="Focused">
+                        <VisualState.Setters>
+                            <Setter Property="BorderColor" Value="{AppThemeBinding Dark={StaticResource SecondaryColor},
+                                   Light={StaticResource ThirdColor}}"/>
+                            <Setter Property="BorderThickness" Value="1.5"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <VisualState x:Name="Disabled">
+
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="controls:StandardSearchBar" x:Key="HeaderSearchBarStyle">
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource MainDarkColorControls}, 
+               Light={StaticResource MainLightColorControls}}"/>
+        <Setter Property="FontFamily" Value="samim"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="IsSpellCheckEnabled" Value="False"/>
+        <Setter Property="Padding" Value="20,8"/>
+        <Setter Property="HorizontalTextAlignment" Value="End"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource MainLightColor}, 
+               Light={StaticResource MainDarkColor}}"/>
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Dark={StaticResource MainLightColor}, 
+               Light={StaticResource MainDarkColor}}"/>
+        <Setter Property="CancelButtonColor" Value="{AppThemeBinding Dark={StaticResource CostColor}, 
+               Light={StaticResource MainDarkColor}}"/>
     </Style>
 
     <Style TargetType="Frame">

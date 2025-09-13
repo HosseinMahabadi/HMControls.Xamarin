@@ -11,10 +11,10 @@ public class SelectableEditor : KeyboardlessEditor
 {
     #region Bindable
 
-    public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), 
+    public static readonly BindableProperty CommandProperty = BindableProperty.Create(
+        nameof(Command), 
         typeof(ICommand), 
-        typeof(SelectableEditor), 
-        default);
+        typeof(SelectableEditor));
 
     public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(
         nameof(CommandParameter), 
@@ -42,11 +42,12 @@ public class SelectableEditor : KeyboardlessEditor
 
     #region Methods
 
-    public override void ActionOnFocused()
+    public override void ActionOnFocus()
     {
         if (Command.CanExecute(CommandParameter))
         {
             Command?.Execute(CommandParameter);
+            Unfocus();
         }
     }
 

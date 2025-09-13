@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ctrl="clr-namespace:HMControls;assembly=HMControls"
              xmlns:me="clr-namespace:HMControlsSample"
-             x:Class="HMControlsSample.MainPage">
+             x:Class="HMControlsSample.MainPage"
+             x:DataType="me:MainPage">
 
     <ScrollView>
         <VerticalStackLayout
@@ -11,20 +12,14 @@
             Spacing="5">
             <ctrl:StandardEntry Text="Standard Entry" 
                                 Placeholder="Standard Entry"
-                                CornerRadius="10"
-                                BorderThickness="2"
-                                BorderColor="SteelBlue"
-                                BackgroundColor="AliceBlue"
-                                TextColor="Black"
-                                Padding="10"/>
-
+                                Style="{StaticResource StandardEntryStyle}"/>
             <me:MyKeyboardlessEntry Text="KeyboardlessEntry"
-                                    CornerRadius="10"
-                                    BorderThickness="2"
-                                    BorderColor="SteelBlue"
-                                    BackgroundColor="AliceBlue"
-                                    TextColor="Black"
-                                    Padding="10"/>
+                                    Style="{StaticResource StandardEntryStyle}"/>
+            <ctrl:SelectableEditor Text="KeyboardlessEditor"
+                                   Command="{Binding SelectableEitorCommand}"
+                                   Style="{StaticResource SelectableEditorStyle}"/>
+            <ctrl:StandardSearchBar Text="StandarsSearchBar"
+                                    Style="{StaticResource HeaderSearchBarStyle}"/>
         </VerticalStackLayout>
     </ScrollView>
 

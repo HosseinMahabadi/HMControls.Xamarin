@@ -9,7 +9,7 @@ namespace HMControlsSample;
 
 public class MyKeyboardlessEntry : KeyboardlessEntry
 {
-    public override void ActionOnFocused()
+    public override void ActionOnFocus()
     {
         Text += " Focused ";
     }

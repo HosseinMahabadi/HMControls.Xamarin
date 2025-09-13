@@ -156,7 +156,7 @@ public class StandardPicker : Picker
                 int padLeft = (int)(Padding.Left * density);
                 int padRight = (int)(Padding.Right * density);
                 bd.SetPadding(new Android.Graphics.Rect(padLeft, padTop, padRight, padBottom));
-                control.SetBackgroundDrawable(bd);
+                control.Background = bd;
             }
         }
 #elif WINDOWS

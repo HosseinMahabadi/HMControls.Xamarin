@@ -156,7 +156,7 @@ public class StandardEntry : Entry
                     int padLeft = (int)(Padding.Left * density);
                     int padRight = (int)(Padding.Right * density);
                     bd.SetPadding(new Android.Graphics.Rect(padLeft, padTop, padRight, padBottom));
-                    control.SetBackgroundDrawable(bd);
+                    control.Background = bd;
                 }
             }
 #elif WINDOWS
@@ -173,7 +173,7 @@ public class StandardEntry : Entry
             }
 #endif
         }
-        catch (Exception ex)
+        catch(Exception ex)
         {
             throw new Exception(ex.Message);
         }

@@ -12,9 +12,10 @@ using HMExtension.Maui;
 #if WINDOWS
 using Microsoft.UI.Xaml.Controls;
 #elif ANDROID
-using Android.Content;
-using Android.Graphics.Drawables;
-//using Android.Widget;
+using AC = Android.Content;
+using AG = Android.Graphics.Drawables;
+using AW = Android.Widget;
+using AV = Android.Views;
 using AndroidX.AppCompat.Widget;
 #endif
 
@@ -116,14 +117,13 @@ public class StandardSearchBar : SearchBar
         try
         {
 #if ANDROID
-            var control = platformView as SearchView;
+            var control = platformView as AndroidX.AppCompat.Widget.SearchView;
             
             if (control != null)
             {
                 if (RenderMode == RenderModeType.Standard)
                 {
-                    int searchPlateId = control.Context.Resources.GetIdentifier("android:id/search_plate", null, null);
-                    Android.Views.View searchPlateView = control.FindViewById(searchPlateId);
+                    var searchPlateView = control.FindViewById(Resource.Id.search_plate);
 
                     var bd = new BorderDrawable(control.Context);
                     bd.SetBackgroundColor(BackgroundColor.ToPlatform());
@@ -136,11 +136,15 @@ public class StandardSearchBar : SearchBar
                     int padLeft = (int)(Padding.Left * density);
                     int padRight = (int)(Padding.Right * density);
                     bd.SetPadding(new Android.Graphics.Rect(padLeft, padTop, padRight, padBottom));
-                    control.SetBackgroundDrawable(bd);
+                    control.Background = bd;
 
-                    var tgd = new GradientDrawable();
-                    tgd.SetStroke(0, BorderColor.ToPlatform());
-                    searchPlateView.SetBackgroundDrawable(tgd);
+                    if(searchPlateView != null)
+                    {
+                        //var tgd = new AG.GradientDrawable();
+                        //tgd.SetStroke(0, BorderColor.ToPlatform());
+                        //searchPlateView.Background = tgd;
+                        searchPlateView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+                    }
                 }
             }
 #elif WINDOWS

@@ -32,7 +32,7 @@ public abstract class KeyboardlessEntry : StandardEntry
                 {
                     if(ReadyForTap)
                     {
-                        ActionOnFocused();
+                        ActionOnFocus();
                     }
                 }),
             };
@@ -42,6 +42,7 @@ public abstract class KeyboardlessEntry : StandardEntry
             Unfocused += (s, e) =>
             {
                 ReadyForTap = false;
+                ActionOnUnfocus();
             };
         }
         catch(Exception ex)
@@ -82,7 +83,7 @@ public abstract class KeyboardlessEntry : StandardEntry
 
         if (Focusable && IsMasterParentAppear)
         {
-            ActionOnFocused();
+            ActionOnFocus();
             ReadyForTap = true;
         }
         else
@@ -93,10 +94,17 @@ public abstract class KeyboardlessEntry : StandardEntry
 
     private async void MasterParent_Appearing(object sender, EventArgs e)
     {
-        Focusable = false;
-        await Task.Delay(200);
-        Focusable = true;
-        IsMasterParentAppear = true;
+        try
+        {
+            Focusable = false;
+            await Task.Delay(200);
+            Focusable = true;
+            IsMasterParentAppear = true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.GetErrorMessage());
+        }
     }
 
     private void MasterParent_Disappearing(object sender, EventArgs e)
@@ -120,14 +128,12 @@ public abstract class KeyboardlessEntry : StandardEntry
                 var activity = Platform.CurrentActivity;
                 var token = activity.CurrentFocus?.WindowToken;
                 inputMethodManager.HideSoftInputFromWindow(token, HideSoftInputFlags.None);
-                activity.Window.DecorView.ClearFocus();
+                //activity.Window.DecorView.ClearFocus();
             }
 #endif
         }
         base.OnPropertyChanging(propertyName);
     }
-
-    public abstract void ActionOnFocused();
 
     protected override void ModifyCustomControl()
     {
@@ -151,5 +157,8 @@ public abstract class KeyboardlessEntry : StandardEntry
         }
     }
 
-#endregion
+    public abstract void ActionOnFocus();
+    public virtual void ActionOnUnfocus() { }
+
+    #endregion
 }

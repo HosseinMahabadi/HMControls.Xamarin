@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
   <PropertyGroup>
-    <Version>2.0.62</Version>
+    <Version>2.0.99</Version>
     <Title>HM Maui Custom Controls</Title>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Include some usable controls for maui apps.
@@ -17,8 +17,8 @@ https://instagram.com/hossein.mahabadi468</Description>
     <Company>Hossein Mahabadi</Company>
     <RepositoryUrl>https://github.com/HosseinMahabadi/HMControls.Xamarin</RepositoryUrl>
     <PackageProjectUrl>https://github.com/HosseinMahabadi/HMControls.Xamarin</PackageProjectUrl>
-    <TargetFrameworks>net8.0-ios;net8.0-android;net8.0</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks>net9.0-ios;net9.0-android;net9.0</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
     <UseMaui>True</UseMaui>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
@@ -35,7 +35,7 @@ https://instagram.com/hossein.mahabadi468</Description>
   </PropertyGroup>
   
   <ItemGroup>
-    <EmbeddedResource Remove="C:\Users\Hossein Mahabadi\.nuget\packages\hmextension.maui\3.0.15\contentFiles\any\net8.0-ios17.2\Platform\Android\Resources\values\styles.xml" />
+    <EmbeddedResource Remove="C:\Users\Hossein Mahabadi\.nuget\packages\hmextension.maui\3.0.15\contentFiles\any\net9.0-ios17.2\Platform\Android\Resources\values\styles.xml" />
   </ItemGroup>
   
   <ItemGroup>
@@ -52,9 +52,9 @@ https://instagram.com/hossein.mahabadi468</Description>
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="HMExtension.Maui" Version="3.0.18" />
-    <PackageReference Include="HMPopup" Version="2.0.89" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.70" />
+    <PackageReference Include="HMExtension.Maui" Version="3.0.19" />
+    <PackageReference Include="HMPopup" Version="2.0.91" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.110" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.110" />
   </ItemGroup>
   </Project>

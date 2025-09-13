@@ -16,6 +16,7 @@ using Android.Graphics.Drawables;
 using Android.Runtime;
 using Android.Views.InputMethods;
 using Android.Widget;
+using AndroidX.AppCompat.Widget;
 #endif
 namespace HMControls;
 
@@ -25,22 +26,23 @@ public abstract class KeyboardlessEditor : StandardEditor
     {
         try
         {
-            TapGestureRecognizer tapGesture = new()
+            /*TapGestureRecognizer tapGesture = new()
             {
                 Command = new Command(() =>
                 {
                     if (ReadyForTap)
                     {
-                        ActionOnFocused();
+                        ActionOnFocus();
                     }
                 }),
             };
-            GestureRecognizers.Add(tapGesture);
+            GestureRecognizers.Add(tapGesture);*/
 
-            Focused += KeyboardlessEditor_Focused;
+            Focused += KeyboardlessEditor_Focused;    
             Unfocused += (s, e) =>
             {
-                ReadyForTap = false;
+                //ReadyForTap = false;
+                ActionOnUnfocus();
             };
         }
         catch (Exception ex)
@@ -57,7 +59,7 @@ public abstract class KeyboardlessEditor : StandardEditor
 
     private bool IsMasterParentAppear { get; set; } = true;
 
-    private bool ReadyForTap { get; set; } = false;
+    //private bool ReadyForTap { get; set; } = false;
 
     #endregion
 
@@ -65,35 +67,50 @@ public abstract class KeyboardlessEditor : StandardEditor
 
     private void KeyboardlessEditor_Focused(object sender, FocusEventArgs e)
     {
-        if (MasterParent == null)
+        try
         {
-            MasterParent = this.GetParent<ContentPage>();
-            if (MasterParent != null)
+            if (MasterParent == null)
             {
-                MasterParent.Appearing -= MasterParent_Appearing;
-                MasterParent.Disappearing -= MasterParent_Disappearing;
+                MasterParent = this.GetParent<ContentPage>();
+                if (MasterParent != null)
+                {
+                    MasterParent.Appearing -= MasterParent_Appearing;
+                    MasterParent.Disappearing -= MasterParent_Disappearing;
 
-                MasterParent.Appearing += MasterParent_Appearing;
-                MasterParent.Disappearing += MasterParent_Disappearing;
+                    MasterParent.Appearing += MasterParent_Appearing;
+                    MasterParent.Disappearing += MasterParent_Disappearing;
+                }
+            }
+
+            if (Focusable && IsMasterParentAppear)
+            {
+                ActionOnFocus();
+                //ReadyForTap = true;
+            }
+            else
+            {
+                Unfocus();
             }
         }
-
-        if (Focusable && IsMasterParentAppear)
+        catch(Exception ex)
         {
-            ActionOnFocused();
-        }
-        else
-        {
-            Unfocus();
+            Debug.WriteLine(ex.GetErrorMessage()); 
         }
     }
 
     private async void MasterParent_Appearing(object sender, EventArgs e)
     {
-        Focusable = false;
-        await Task.Delay(200);
-        Focusable = true;
-        IsMasterParentAppear = true;
+        try
+        {
+            Focusable = false;
+            await Task.Delay(200);
+            Focusable = true;
+            IsMasterParentAppear = true;
+        }
+        catch(Exception ex)  
+        {
+            Debug.WriteLine(ex.GetErrorMessage());
+        }
     }
 
     private void MasterParent_Disappearing(object sender, EventArgs e)
@@ -110,15 +127,16 @@ public abstract class KeyboardlessEditor : StandardEditor
         if (propertyName == IsFocusedProperty.PropertyName)
         {
 #if ANDROID
-        var context = Platform.AppContext;
-        var inputMethodManager = context.GetSystemService(Context.InputMethodService) as InputMethodManager;
-        if (inputMethodManager != null)
-        {
-            var activity = Platform.CurrentActivity;
-            var token = activity.CurrentFocus?.WindowToken;
-            inputMethodManager.HideSoftInputFromWindow(token, HideSoftInputFlags.None);
-            activity.Window.DecorView.ClearFocus();
-        }
+            Debug.WriteLine($"KeyboardlessEditor {IsFocusedProperty.PropertyName}");
+            var context = Platform.AppContext;
+            var inputMethodManager = context.GetSystemService(Context.InputMethodService) as InputMethodManager;
+            if (inputMethodManager != null)
+            {
+                var activity = Platform.CurrentActivity;
+                var token = activity.CurrentFocus?.WindowToken;
+                inputMethodManager.HideSoftInputFromWindow(token, HideSoftInputFlags.None);
+                //activity.Window.DecorView.ClearFocus();
+            }
 #endif
         }
         base.OnPropertyChanging(propertyName);
@@ -130,22 +148,24 @@ public abstract class KeyboardlessEditor : StandardEditor
         {
             base.ModifyCustomControl();
 #if ANDROID
-        var view = Handler.PlatformView as EditText;
+            var view = Handler.PlatformView as AppCompatEditText;
 
-        // Disable the Keyboard on Focus
-        view.ShowSoftInputOnFocus = false;
-        view.SetCursorVisible(false);
+            // Disable the Keyboard on Focus
+            view.ShowSoftInputOnFocus = false;
+            view.SetCursorVisible(false);
 #elif WINDOWS
-        var view = Handler.PlatformView as TextBox;
-        view.IsReadOnly = true;
+            var view = Handler.PlatformView as TextBox;
+            view.IsReadOnly = true;
 #endif
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine("SelectableEditor --> " + ex.TargetSite + " " + ex.Message);
+            Debug.WriteLine("SelectableEditor --> " + ex.TargetSite + " " + ex.Message);
         }
     }
 
-    public abstract void ActionOnFocused();
-#endregion
+    public abstract void ActionOnFocus();
+    public virtual void ActionOnUnfocus() { }
+
+    #endregion
 }

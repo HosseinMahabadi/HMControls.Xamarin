@@ -102,7 +102,7 @@ public class NumericPicker : KeyboardlessEntry
 
     #region Methods
 
-    public override async void ActionOnFocused()
+    public override async void ActionOnFocus()
     {
         int answer = await Popup.ShowSelectionAsync(Title,
             Message,
